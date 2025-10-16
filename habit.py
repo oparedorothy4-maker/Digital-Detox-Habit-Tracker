@@ -1,5 +1,5 @@
 from datetime import date
-from typing import List 
+from typing import List, Optional
 
 class Habit:
     """
@@ -13,7 +13,7 @@ class Habit:
         current_streak (int): Number of consecutive successful completions.
     """
 
-    def __init__(self, id: int, name: str, periodicity: str, creation_date: date = date.today()):
+    def __init__(self, name: str, periodicity: str, creation_date: date = date.today() ,id: Optional[int] = None):
        """
        Initializes a new Habit instance.
 

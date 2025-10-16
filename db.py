@@ -1,7 +1,7 @@
 import sqlite3
 from .habit import Habit
 from datetime import date
-from typing import List
+from typing import List, Optional
 
 class DatabaseConnector:
     """
@@ -71,7 +71,40 @@ class DatabaseConnector:
           habits.append(habit)
         return habits
 
-                       
+    
+    def get_all_habits(self) -> List[Habit]:
+        """
+        Returns all habits from the database (alias for the load_habits).
+        """
+        return self.load_habits()
+
+    def get_habit_by_id(self, habit_id: int) -> Optional[Habit]:
+        """
+        Retrieves a single habit by its ID.
+
+        Args:
+            habit_id (int): The unique ID of the habit.
+        
+        Returns:
+            Habit or None: The matching Habit object if found.
+        """
+        cursor = self.conn.cursor()
+        cursor.execute(
+            "SELECT id, name, periodicity, creation_date, completion_dates, current_streak FROM habits WHERE id = ?",
+            (habit_id,)
+        )
+        row = cursor.fetchone()
+        if row:
+            id, name, periodicity, creation_date, dates_str, streak = row
+            dates = [date.fromisoformat(d) for d in dates_str.split(",") if d]
+            habit = Habit(id=id, name=name, periodicity=periodicity, creation_date=date.fromisoformat(creation_date))
+            habit.completion_dates = dates
+            habit.current_streak = streak
+            return habit
+        return None
+
+            
+         
         
 
         

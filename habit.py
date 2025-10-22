@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from typing import List, Optional
 
 class Habit:
@@ -13,17 +13,16 @@ class Habit:
         current_streak (int): Number of consecutive successful completions.
     """
 
-    def __init__(self, name: str, periodicity: str, creation_date: date = date.today() ,id: Optional[int] = None):
+    def __init__(self, name: str, periodicity: str, creation_date: date = date.today(), id: Optional[int] = None):
        """
        Initializes a new Habit instance.
 
        Args:
-           id (int): Unique habit ID.
            name (str): Name of the habit.
-           periodicity (str): Frequency of the habit.
+           periodicity (str): Frequency of the habit ("daily" or "weekly").
            creation_date (date, optional): Date of creation. Defaults to today.
-        """
-       
+           id (Optional[int], optional): Unique habit ID: Defaults to None.
+        """ 
        self.id = id 
        self.name = name
        self.periodicity = periodicity
@@ -36,7 +35,7 @@ class Habit:
         Marks today's date as completed for the habit.
         
         Returns:
-            bool: True if today was succesfully marked, False if already completed.
+            bool: True if today was successfully marked, False if already completed.
         """
         today = date.today()
         if today not in self.completion_dates:
@@ -47,34 +46,52 @@ class Habit:
     
     def update_streak(self):
 
+        """ Updates the current streak based on consecutive completion dates.
+            Daily habits increase by 1 per day; weekly habits increase by 1 per week.
         """
-        Updates the current streak based on consecutive completion dates.
-        """
-        sorted_dates = sorted(self.completion_dates, reverse=True)
-        streak = 0
-        today = date.today()
+        if not self.completion_dates:
+           self.current_streak = 0
+           return
 
-        for i, d in enumerate(sorted_dates):
-           if (today - d) .days == i:
-                streak += 1
-           else:
-               break
-           
+        dates_to_check = sorted(list(set(self.completion_dates)))  #use unique date
+
+        gap_days = 1 if self.periodicity == "daily" else 7
+
+        streak = 1
+
+
+        for i in range(1, len(dates_to_check)):
+            previous_date = dates_to_check[i -1]
+            current_date_check = dates_to_check[i]
+            gap = (current_date_check - previous_date).days
+
+            if gap == gap_days:
+                streak +=1
+            elif gap < gap_days:
+
+                continue
+            else:
+                break
+
         self.current_streak = streak
+
 
     def reset_habit(self):
         """
         Resets the habit streak and clears completion history.
+
+        Returns:
+            None
         """
         self.completion_dates.clear()
         self.current_streak = 0
         
-    def __repr__(self) -> str:
+    def __repr__(self) -> str: 
         """
         Returns a string representation of the Habit instance.
     
         Returns: 
-             str: Formatted string with habit details.
+             str: Formatted string showing id, name, periodicity, creation date, and current streak.
         """
     
         return (f"Habit(id={self.id}, name='{self.name}', periodicity='{self.periodicity}', "

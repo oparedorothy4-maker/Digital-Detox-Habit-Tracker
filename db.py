@@ -1,5 +1,5 @@
 import sqlite3
-from .habit import Habit
+from habit import Habit
 from datetime import date
 from typing import List, Optional
 
@@ -45,11 +45,22 @@ class DatabaseConnector:
 
         cursor = self.conn.cursor()
         dates_str = ",".join([d.isoformat() for d in habit.completion_dates])
-        cursor.execute("""
-            INSERT OR REPLACE INTO habits (id, name, periodicity, creation_date, completion_dates, current_streak)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (habit.id, habit.name, habit.periodicity, habit.creation_date.isoformat(), dates_str, habit.current_streak))  
+
+        if habit.id is None:
+           cursor.execute("""
+            INSERT INTO habits (name, periodicity, creation_date, completion_dates, current_streak)
+            VALUES (?, ?, ?, ?, ?)
+        """,(habit.name, habit.periodicity, habit.creation_date.isoformat(), dates_str, habit.current_streak)) 
+           habit.id = cursor.lastrowid
+        else:
+            cursor.execute("""
+                UPDATE habits 
+                SET name=?, periodicity=?, creation_date=?, completion_dates=?, current_streak=?
+                WHERE id=?
+        """,(habit.name, habit.periodicity, habit.creation_date.isoformat(), dates_str, habit.current_streak, habit.id))
+
         self.conn.commit()
+                            
     
     def load_habits(self) -> List[Habit]:
         """
@@ -80,30 +91,52 @@ class DatabaseConnector:
 
     def get_habit_by_id(self, habit_id: int) -> Optional[Habit]:
         """
-        Retrieves a single habit by its ID.
+        Find one habit using its ID:
+        habit_id (int): The number linked to the habit.
 
-        Args:
-            habit_id (int): The unique ID of the habit.
-        
         Returns:
-            Habit or None: The matching Habit object if found.
+        The habit if it exists, otherwise None.
+        
         """
         cursor = self.conn.cursor()
         cursor.execute(
-            "SELECT id, name, periodicity, creation_date, completion_dates, current_streak FROM habits WHERE id = ?",
+            "SELECT id, name , periodicity, creation_date, completion_dates, current_streak FROM habits Where id=?",
             (habit_id,)
         )
         row = cursor.fetchone()
-        if row:
-            id, name, periodicity, creation_date, dates_str, streak = row
-            dates = [date.fromisoformat(d) for d in dates_str.split(",") if d]
-            habit = Habit(id=id, name=name, periodicity=periodicity, creation_date=date.fromisoformat(creation_date))
-            habit.completion_dates = dates
-            habit.current_streak = streak
-            return habit
-        return None
+        if row is None:
+            return None
+        id, name, periodicity, creation_date, dates_str, streak = row
+        completion_dates = [date.fromisoformat(d) for d in dates_str.split(",") if d]
+    
+        habit = Habit(id=id, name=name, periodicity=periodicity, creation_date=date.fromisoformat(creation_date))
+        habit.completion_dates = completion_dates
+        habit.current_streak = streak
+        return habit
+    
 
-            
+    def delete_habit(self, habit_id: int) -> bool:
+        """
+        Deletes a habit from the database by its ID.
+ 
+        Args:
+            habit_id (int): The unique identifier of the habit to delete.
+
+        Returns:
+            bool: True if the habit was deleted successfully, False if no such habit exists.
+        """
+        cursor = self.conn.cursor()
+        cursor.execute("DELETE FROM habits WHERE id = ?", (habit_id,))
+        self.conn.commit()
+
+        if cursor.rowcount > 0:
+            return True # Habit deleted successsfully
+        else:
+            return False #  Habit not found
+        
+
+
+
          
         
 

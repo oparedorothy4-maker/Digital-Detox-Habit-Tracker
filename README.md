@@ -1,14 +1,14 @@
 
-### Digital Detox Project Habit Tracker
+## Digital Detox Project Habit Tracker
 
-## GitHub Repository:
+### GitHub Repository:
 
 
 [Digital-Detox-Habit-Tracker](https://github.com/oparedorothy4-maker/Digital-Detox-Habit-Tracker)
 
 
 
-## Description
+### Description
 A Python CLI application to track daily and weekly digital detox habits.
 It allows creating, completing, listing, deleting habits, and viewing analytics.
 
@@ -16,7 +16,7 @@ It allows creating, completing, listing, deleting habits, and viewing analytics.
 
 
 
-**Installation**
+## Installation
 
 ### Clone the Repository
 ```bash
@@ -39,7 +39,7 @@ source venv/bin/activate
 
 
 
-### Install Dependencies
+## Install Dependencies
    
 ```bash
 
@@ -48,7 +48,7 @@ pip install -r requirements.txt
 
 
 
-**Run**
+## Run
 ### Start the CLI application
 
 ```bash
@@ -73,7 +73,7 @@ python main.py
 
 
 
-**Test**
+## Test
 ### Run unit test with pytest
 
 ```bash
@@ -86,7 +86,7 @@ pytest
 
 
 
-### Examples
+## Examples
 
 ### Creating a habit
 

@@ -16,7 +16,7 @@ An abstract PDF is included that summarizes the project, technical approach, cha
 
 
 ## Abstract
-For a detailed overview of the project, including the technical approach, challenges, and features, see the [Abstract.pdf](Abstract%20for%20Finalization%20Phase.pdf)
+For a detailed overview of the project, including the technical approach, challenges, and features, see the [Abstract.pdf](Abstract.pdf)
 
 
 

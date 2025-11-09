@@ -11,7 +11,11 @@
 ### Description
 Digital Detox Habit Tracker is a Python command-line (CLI) application that helps users build healthier digital habits by tracking daily and weekly goals.
 It allows users to create, complete, list, delete and analyze habits, helping reduce screen time and encourage consistent digital detox routines.
+An abstract PDF is included that summarizes the project, technical approach, challenges, and key insights.
 
+
+## Abstract
+For a detailed overview of the project, including the technical approach, challenges, and features, see the 
 
 
 ## Installation

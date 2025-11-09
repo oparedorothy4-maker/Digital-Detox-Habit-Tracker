@@ -121,6 +121,7 @@ Longest streak: No phone after 9PM with 1 days
 ## Author
 
 Dorothy Opare
+
 Digital Detox Habit Tracker – Final Project Submission
 
 
